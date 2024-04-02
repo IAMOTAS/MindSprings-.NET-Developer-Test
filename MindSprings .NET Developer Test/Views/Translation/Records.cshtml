@@ -1,0 +1,25 @@
+﻿@model IEnumerable<MindSprings_.NET_Developer_Test.Models.TranslationModel>
+
+@{
+    ViewBag.Title = "Records";
+}
+
+<h2>Records</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Input Text</th>
+            <th>Translated Text</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.InputText</td>
+                <td>@item.TranslatedText</td>
+            </tr>
+        }
+    </tbody>
+</table>

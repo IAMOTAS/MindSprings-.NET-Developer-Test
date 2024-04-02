@@ -1,0 +1,27 @@
+﻿@model MindSprings_.NET_Developer_Test.Models.TranslationModel
+
+@{
+    ViewBag.Title = "Translation";
+}
+
+<h2>Translation</h2>
+
+@using (Html.BeginForm("Translate", "Translation", FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+    <div>
+        @Html.LabelFor(m => m.InputText)
+        <br />
+        @Html.TextAreaFor(m => m.InputText, new { rows = 4, cols = 50 })
+        @Html.ValidationMessageFor(m => m.InputText)
+    </div>
+    <div>
+        <input type="submit" value="Translate" />
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(Model.TranslatedText))
+{
+    <h3>Translated Text:</h3>
+    <p>@Model.TranslatedText</p>
+}
