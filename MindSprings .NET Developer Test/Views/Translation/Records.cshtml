@@ -6,7 +6,7 @@
 
 <h2>Records</h2>
 
-<table class="table">
+<table id="recordsTable" class="table">
     <thead>
         <tr>
             <th>Input Text</th>
@@ -23,3 +23,32 @@
         }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var page = 1;
+            var loading = false;
+
+            $(window).scroll(function () {
+                if ($(window).scrollTop() == $(document).height() - $(window).height() && !loading) {
+                    loading = true;
+                    page++;
+                    $.ajax({
+                        url: '/Translation/Records?page=' + page,
+                        type: 'GET',
+                        success: function (data) {
+                            // Append new records to the table
+                            $('#recordsTable tbody').append(data);
+                            loading = false;
+                        },
+                        error: function () {
+                            // Handle error
+                            loading = false;
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

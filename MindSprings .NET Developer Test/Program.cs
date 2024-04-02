@@ -1,6 +1,9 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,11 @@ builder.Host.UseSerilog(); // Add this line to use Serilog in the host
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Configure Autofac
+var containerBuilder = new ContainerBuilder();
+containerBuilder.RegisterModule(new AutofacModule()); // Register Autofac module
+containerBuilder.Populate(builder.Services); // Populate services from IServiceCollection to Autofac container
 
 var app = builder.Build();
 
@@ -35,3 +43,13 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+// Define Autofac module
+public class AutofacModule : Module
+{
+    protected override void Load(ContainerBuilder builder)
+    {
+        // Register your services and dependencies here
+        builder.RegisterType<YourService>().As<IYourService>();
+    }
+}

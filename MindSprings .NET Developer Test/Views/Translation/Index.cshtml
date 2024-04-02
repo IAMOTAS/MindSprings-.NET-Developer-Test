@@ -6,7 +6,7 @@
 
 <h2>Translation</h2>
 
-@using (Html.BeginForm("Translate", "Translation", FormMethod.Post))
+@using (Html.BeginForm("Translate", "Translation", FormMethod.Post, new { id = "translationForm" }))
 {
     @Html.ValidationSummary(true)
     <div>
@@ -16,12 +16,32 @@
         @Html.ValidationMessageFor(m => m.InputText)
     </div>
     <div>
-        <input type="submit" value="Translate" />
+        <input type="submit" id="submitBtn" value="Translate" />
     </div>
 }
 
-@if (!string.IsNullOrEmpty(Model.TranslatedText))
-{
-    <h3>Translated Text:</h3>
-    <p>@Model.TranslatedText</p>
+<div id="translatedText"></div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#submitBtn').click(function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '/Translation/Translate',
+                    type: 'POST',
+                    data: $('#translationForm').serialize(),
+                    success: function (result) {
+                        // Handle success, update UI with translated text
+                        $('#translatedText').text(result.translatedText);
+                    },
+                    error: function () {
+                        // Handle error
+                        alert('An error occurred during translation.');
+                    }
+                });
+            });
+        });
+    </script>
 }
