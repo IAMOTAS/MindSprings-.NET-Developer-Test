@@ -1,32 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
-using MindSprings_.NET_Developer_Test.Models;
-using System.Diagnostics;
+using MindSprings_.NET_Developer_Test.Services;
+using System.Threading.Tasks;
 
 namespace MindSprings_.NET_Developer_Test.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly TranslationService _translationService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(TranslationService translationService)
         {
-            _logger = logger;
+            _translationService = translationService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            string translatedText = await _translationService.TranslateToLeetSpeak("Hello");
+            ViewBag.TranslatedText = translatedText;
             return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

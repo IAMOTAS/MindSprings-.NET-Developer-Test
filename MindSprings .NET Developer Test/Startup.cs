@@ -1,25 +1,29 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using MindSprings_.NET_Developer_Test.Services;
 
-public class Startup
+namespace MindSprings_.NET_Developer_Test
 {
-    // This method gets called by the runtime. Use this method to add services to the container.
-    public void ConfigureServices(IServiceCollection services)
+    public class Startup
     {
-        services.AddControllersWithViews(); // Add MVC services
-        // Add other services here as needed
-    }
-
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app)
-    {
-        app.UseRouting(); // Enable routing
-
-        app.UseEndpoints(endpoints =>
+        public void ConfigureServices(IServiceCollection services)
         {
-            endpoints.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Translation}/{action=Index}/{id?}");
-        });
+            services.AddHttpClient<TranslationService>();
+            services.AddTransient<TranslationService>(); // Register TranslationService as transient
+            services.AddControllersWithViews();
+        }
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            // Configure middleware, routing, etc.
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
+        }
     }
 }

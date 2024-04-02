@@ -1,7 +1,6 @@
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using MindSprings_.NET_Developer_Test;
 using Serilog;
 using System;
 
@@ -30,9 +29,8 @@ public class Program
     public static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
             .UseSerilog()
-            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
             .ConfigureWebHostDefaults(webBuilder =>
             {
-                webBuilder.UseStartup<Startup>(); // Use the Startup class to configure the web host
+                webBuilder.UseStartup<Startup>(); // Ensure the correct Startup class is used
             });
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MindSprings_.NET_Developer_Test.Models;
 using Newtonsoft.Json;
 
@@ -55,7 +55,7 @@ namespace MindSprings_.NET_Developer_Test.Controllers
                 // Add more translations as needed
             };
 
-            return Json(translations, JsonRequestBehavior.AllowGet);
+            return new JsonResult(translations);
         }
 
         private async Task<string> TranslateToLeetSpeak(string inputText)
