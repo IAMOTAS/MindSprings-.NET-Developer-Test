@@ -22,7 +22,7 @@ namespace MindSprings_.NET_Developer_Test
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Translation}/{action=Index}/{id?}");
             });
         }
     }
