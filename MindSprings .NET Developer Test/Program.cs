@@ -5,51 +5,36 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Configure Serilog
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.File("log.txt")
-    .CreateLogger();
-
-builder.Host.UseSerilog(); // Add this line to use Serilog in the host
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-// Configure Autofac
-var containerBuilder = new ContainerBuilder();
-containerBuilder.RegisterModule(new AutofacModule()); // Register Autofac module
-containerBuilder.Populate(builder.Services); // Populate services from IServiceCollection to Autofac container
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+public class Program
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.Run();
-
-// Define Autofac module
-public class AutofacModule : Module
-{
-    protected override void Load(ContainerBuilder builder)
+    public static void Main(string[] args)
     {
-        // Register your services and dependencies here
-        builder.RegisterType<YourService>().As<IYourService>();
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.File("log.txt")
+            .CreateLogger();
+
+        try
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Host terminated unexpectedly");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
     }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+     Host.CreateDefaultBuilder(args)
+         .UseSerilog()
+         .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+         .ConfigureWebHostDefaults(webBuilder =>
+         {
+             // Configure web host without using a Startup class
+         });
+
 }
+
