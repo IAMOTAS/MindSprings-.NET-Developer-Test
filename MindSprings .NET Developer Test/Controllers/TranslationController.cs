@@ -35,7 +35,7 @@ namespace MindSprings_.NET_Developer_Test.Controllers
 
                 return Json(new { translatedText });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, "Translation failed. Please try again later.");
             }
