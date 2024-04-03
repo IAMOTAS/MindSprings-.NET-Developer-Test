@@ -25,19 +25,17 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $('#submitBtn').click(function (e) {
+            $('#translationForm').submit(function (e) {
                 e.preventDefault();
 
                 $.ajax({
-                    url: '/Translation/Translate',
+                    url: '@Url.Action("Translate", "Translation")',
                     type: 'POST',
                     data: $('#translationForm').serialize(),
                     success: function (result) {
-                        // Handle success, update UI with translated text
                         $('#translatedText').text(result.translatedText);
                     },
                     error: function () {
-                        // Handle error
                         alert('An error occurred during translation.');
                     }
                 });

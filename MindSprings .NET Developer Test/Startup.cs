@@ -11,6 +11,7 @@ namespace MindSprings_.NET_Developer_Test
         {
             services.AddHttpClient<TranslationService>();
             services.AddTransient<TranslationService>(); // Register TranslationService as transient
+            services.AddHttpClient<FunTranslationsService>(); // Register FunTranslationsService as transient
             services.AddControllersWithViews();
         }
 
@@ -23,6 +24,11 @@ namespace MindSprings_.NET_Developer_Test
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Translation}/{action=Index}/{id?}");
+
+                // Add a custom route for TranslationController
+                endpoints.MapControllerRoute(
+                    name: "translation",
+                    pattern: "Translation/{action=Index}/{id?}");
             });
         }
     }
