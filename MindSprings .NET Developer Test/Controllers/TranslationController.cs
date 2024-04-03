@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MindSprings_.NET_Developer_Test.Models;
+using MindSprings_.NET_Developer_Test.Services;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -9,11 +9,13 @@ namespace MindSprings_.NET_Developer_Test.Controllers
 {
     public class TranslationController : Controller
     {
-        private readonly HttpClient _httpClient;
+        private readonly FunTranslationsService _klingonTranslationService;
+        private readonly TranslationService _leetTranslationService;
 
-        public TranslationController()
+        public TranslationController(FunTranslationsService klingonTranslationService, TranslationService leetTranslationService)
         {
-            _httpClient = new HttpClient();
+            _klingonTranslationService = klingonTranslationService ?? throw new ArgumentNullException(nameof(klingonTranslationService));
+            _leetTranslationService = leetTranslationService ?? throw new ArgumentNullException(nameof(leetTranslationService));
         }
 
         public IActionResult Index()
@@ -22,7 +24,7 @@ namespace MindSprings_.NET_Developer_Test.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Translate(TranslationModel model)
+        public async Task<IActionResult> TranslateSentence(SentenceModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -31,31 +33,17 @@ namespace MindSprings_.NET_Developer_Test.Controllers
 
             try
             {
-                string translatedText = await TranslateToLeetSpeak(model.InputText);
+                // Translate the sentence to Klingon
+                string klingonTranslation = await _klingonTranslationService.TranslateToKlingon(model.InputSentence);
 
-                return Json(new { translatedText });
+                // Translate the sentence to Leet Speak
+                string leetTranslation = await _leetTranslationService.TranslateToLeetSpeak(model.InputSentence);
+
+                return Json(new { klingonTranslation, leetTranslation });
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, "Translation failed. Please try again later.");
-            }
-        }
-
-        private async Task<string> TranslateToLeetSpeak(string inputText)
-        {
-            string apiUrl = "https://api.funtranslations.com/translate/klingon.json?text=" + inputText; // Corrected API URL
-            HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
-
-            if (response.IsSuccessStatusCode)
-            {
-                string responseContent = await response.Content.ReadAsStringAsync();
-                dynamic responseData = JsonConvert.DeserializeObject(responseContent);
-                string translatedText = responseData.contents.translated;
-                return translatedText;
-            }
-            else
-            {
-                throw new Exception("Translation API request failed: " + response.ReasonPhrase);
             }
         }
     }
