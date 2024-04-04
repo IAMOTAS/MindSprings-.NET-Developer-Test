@@ -2,6 +2,6 @@
 {
     public class TranslationResponse
     {
-        public TranslationContents Contents { get; set; }
+        public TranslationContents? Contents { get; set; }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MindSprings_.NET_Developer_Test.Models;
 using MindSprings_.NET_Developer_Test.Services;
-using Newtonsoft.Json;
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace MindSprings_.NET_Developer_Test.Controllers
@@ -10,12 +9,12 @@ namespace MindSprings_.NET_Developer_Test.Controllers
     public class TranslationController : Controller
     {
         private readonly FunTranslationsService _klingonTranslationService;
-        private readonly TranslationService _leetTranslationService;
+        private readonly TranslationService _translationService;
 
-        public TranslationController(FunTranslationsService klingonTranslationService, TranslationService leetTranslationService)
+        public TranslationController(FunTranslationsService klingonTranslationService, TranslationService translationService)
         {
             _klingonTranslationService = klingonTranslationService ?? throw new ArgumentNullException(nameof(klingonTranslationService));
-            _leetTranslationService = leetTranslationService ?? throw new ArgumentNullException(nameof(leetTranslationService));
+            _translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
         }
 
         public IActionResult Index()
@@ -37,7 +36,7 @@ namespace MindSprings_.NET_Developer_Test.Controllers
                 string klingonTranslation = await _klingonTranslationService.TranslateToKlingon(model.InputSentence);
 
                 // Translate the sentence to Leet Speak
-                string leetTranslation = await _leetTranslationService.TranslateToLeetSpeak(model.InputSentence);
+                string leetTranslation = await _translationService.TranslateToLeetSpeak(model.InputSentence);
 
                 return Json(new { klingonTranslation, leetTranslation });
             }
